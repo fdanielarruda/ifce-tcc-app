@@ -83,22 +83,13 @@ const hasTransactions =
             </div>
 
             <div class="px-4 py-3">
-                <MonthNavigator
-                    :current-month="currentMonth"
-                    @navigate="navigateMonth"
-                />
+                <MonthNavigator :current-month="currentMonth" @navigate="navigateMonth" />
             </div>
 
             <div class="px-4 pb-4">
-                <TransactionGroup
-                    title="Hoje"
-                    :transactions="todayTransactions"
-                />
+                <TransactionGroup title="Hoje" :transactions="todayTransactions" />
 
-                <TransactionGroup
-                    title="Ontem"
-                    :transactions="yesterdayTransactions"
-                />
+                <TransactionGroup title="Ontem" :transactions="yesterdayTransactions" />
 
                 <TransactionGroup
                     v-for="group in olderTransactions"

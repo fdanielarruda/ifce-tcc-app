@@ -16,5 +16,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/transacoes', [TransactionController::class, 'index'])->name('transactions.index');
+Route::get('/transacoes/cadastrar', [TransactionController::class, 'create'])->name('transactions.create');
 
 require __DIR__ . '/auth.php';

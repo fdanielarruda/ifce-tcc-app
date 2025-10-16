@@ -21,4 +21,11 @@ class TransactionController
 
         return Inertia::render('Transactions/TransactionIndex', $data);
     }
+
+    public function create()
+    {
+        $data = $this->service->prepareDataForCreate();
+
+        return Inertia::render('Transactions/TransactionCreate', $data);
+    }
 }

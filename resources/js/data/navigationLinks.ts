@@ -30,6 +30,12 @@ export const staticNavigationLinks: NavigationLink[] = [
         route: 'transactions.index',
         type: 'link',
     },
+    {
+        label: 'Nova Transação',
+        icon: HomeIcon,
+        route: 'transactions.create',
+        type: 'link',
+    },
 
     { type: 'separator' },
     {

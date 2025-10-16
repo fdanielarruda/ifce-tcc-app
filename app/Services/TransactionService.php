@@ -105,6 +105,13 @@ class TransactionService
         ];
     }
 
+    public function prepareDataForCreate()
+    {
+        return [
+            'categories' => Category::all()
+        ];
+    }
+
     private function getCategoryIcon(string $category): string
     {
         $icons = [
