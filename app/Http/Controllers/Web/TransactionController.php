@@ -19,6 +19,6 @@ class TransactionController
 
         $data = $this->service->getTransactionsGroupedByDate($month, $year);
 
-        return Inertia::render('Transactions/Index', $data);
+        return Inertia::render('Transactions/TransactionIndex', $data);
     }
 }
