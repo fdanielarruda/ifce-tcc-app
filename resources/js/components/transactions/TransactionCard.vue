@@ -33,18 +33,18 @@ const getIconComponent = (iconType: string) => {
 
 <template>
     <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 flex items-center justify-between"
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 flex items-center justify-between gap-3"
     >
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
             <div
-                class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+                class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"
             >
                 <component
                     :is="getIconComponent(transaction.icon)"
                     class="w-5 h-5 text-gray-600 dark:text-gray-300"
                 />
             </div>
-            <div>
+            <div class="min-w-0 flex-1">
                 <p class="font-medium text-gray-800 dark:text-gray-200">
                     {{ transaction.title }}
                 </p>
@@ -55,7 +55,7 @@ const getIconComponent = (iconType: string) => {
         </div>
         <span
             :class="[
-                'font-semibold text-base',
+                'font-semibold text-base whitespace-nowrap flex-shrink-0',
                 transaction.type === 'receita'
                     ? 'text-green-600 dark:text-green-400'
                     : 'text-red-600 dark:text-red-400',
