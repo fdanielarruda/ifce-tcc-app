@@ -87,9 +87,7 @@ const navigateMonth = (direction: "prev" | "next") => {
     <Head title="Transações" />
 
     <AuthenticatedLayout>
-        <!-- Body Slot (Conteúdo Principal) -->
         <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-            <!-- Balance Card -->
             <div class="p-4">
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
                     <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-2">
@@ -126,7 +124,6 @@ const navigateMonth = (direction: "prev" | "next") => {
                 </div>
             </div>
 
-            <!-- Month Navigation -->
             <div class="px-4 py-3">
                 <div
                     class="flex bg-white dark:bg-gray-800 items-center justify-between w-full rounded-xl shadow-sm p-1"
@@ -153,9 +150,7 @@ const navigateMonth = (direction: "prev" | "next") => {
                 </div>
             </div>
 
-            <!-- Transactions List -->
             <div class="px-4 pb-4">
-                <!-- Today Section -->
                 <div v-if="props.todayTransactions.length > 0" class="mb-6">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                         Hoje
@@ -201,7 +196,6 @@ const navigateMonth = (direction: "prev" | "next") => {
                     </div>
                 </div>
 
-                <!-- Yesterday Section -->
                 <div v-if="props.yesterdayTransactions.length > 0" class="mb-6">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                         Ontem
@@ -247,7 +241,6 @@ const navigateMonth = (direction: "prev" | "next") => {
                     </div>
                 </div>
 
-                <!-- Older Transactions -->
                 <div
                     v-if="props.olderTransactions && props.olderTransactions.length > 0"
                     v-for="group in props.olderTransactions"
@@ -298,7 +291,6 @@ const navigateMonth = (direction: "prev" | "next") => {
                     </div>
                 </div>
 
-                <!-- Empty State -->
                 <div
                     v-if="
                         props.todayTransactions.length === 0 &&
