@@ -156,6 +156,16 @@ class TransactionService
         }
     }
 
+    public function generateByIa(array $data)
+    {
+        $data = [
+            'original_message' => $data['description'],
+            'telegram_id' => auth()->user()->telegram_id
+        ];
+
+        return $this->create($data);
+    }
+
     public function delete(int $id)
     {
         $transaction = Transaction::findOrFail($id);
