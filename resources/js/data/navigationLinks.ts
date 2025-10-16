@@ -24,6 +24,12 @@ export const staticNavigationLinks: NavigationLink[] = [
         route: 'dashboard',
         type: 'link',
     },
+    {
+        label: 'Transações',
+        icon: HomeIcon,
+        route: 'transactions.index',
+        type: 'link',
+    },
 
     { type: 'separator' },
     {
