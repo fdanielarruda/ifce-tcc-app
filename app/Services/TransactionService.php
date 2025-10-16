@@ -61,7 +61,7 @@ class TransactionService
                 'category' => $transaction->category->title,
                 'time' => $transaction->created_at->format('H:i'),
                 'amount' => $transaction->type === 'receita' ? $transaction->value : -$transaction->value,
-                'type' => $transaction->type === 'receita' ? 'income' : 'expense',
+                'type' => $transaction->type,
                 'icon' => $this->getCategoryIcon($transaction->category->title)
             ];
 
