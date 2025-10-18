@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\UserGoal;
 use App\Models\Category;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 
 class GoalService
 {
@@ -17,11 +19,41 @@ class GoalService
     public function prepareDataForIndex()
     {
         $goals = $this->list();
+
         $categories = Category::orderBy('title')->get();
 
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $expenses = Transaction::select('category_id', DB::raw('SUM(ABS(amount)) as total'))
+            ->where('user_id', auth()->id())
+            ->where('type', 'despesa')
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('category_id')
+            ->pluck('total', 'category_id');
+
+        $goalsWithExpenses = $goals->map(function ($goal) use ($expenses) {
+            $currentExpense = $expenses->get($goal->category_id, 0);
+
+            return [
+                'id' => $goal->id,
+                'category_id' => $goal->category_id,
+                'category' => $goal->category,
+                'max_per_month' => $goal->max_per_month,
+                'message' => $goal->message,
+                'current_expense' => $currentExpense,
+                'percentage' => $goal->max_per_month > 0
+                    ? min(($currentExpense / $goal->max_per_month) * 100, 100)
+                    : 0,
+                'is_over_limit' => $currentExpense > $goal->max_per_month,
+            ];
+        });
+
         return [
-            'goals' => $goals,
-            'categories' => $categories
+            'goals' => $goalsWithExpenses,
+            'categories' => $categories,
+            'currentMonth' => now()->isoFormat('MMMM YYYY'),
         ];
     }
 

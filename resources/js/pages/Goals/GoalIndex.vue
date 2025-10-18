@@ -17,6 +17,9 @@ interface Goal {
     };
     max_per_month: number;
     message?: string;
+    current_expense: number;
+    percentage: number;
+    is_over_limit: boolean;
 }
 
 interface Category {
@@ -28,6 +31,7 @@ interface Category {
 interface Props {
     goals: Goal[];
     categories: Category[];
+    currentMonth: string;
 }
 
 const props = defineProps<Props>();
@@ -51,7 +55,10 @@ const closeCreateModal = () => {
             <HeaderCell title="Metas" />
 
             <div class="p-4 space-y-4">
-                <div>
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ currentMonth }}
+                    </p>
                     <button
                         @click="openCreateModal"
                         class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"

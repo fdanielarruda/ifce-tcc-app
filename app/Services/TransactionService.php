@@ -213,7 +213,7 @@ class TransactionService
         $category = Category::where('title', $find_category);
 
         if ($category->exists()) {
-            return $category->id;
+            return $category->first()->id;
         }
 
         return null;
