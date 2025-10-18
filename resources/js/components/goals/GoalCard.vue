@@ -41,7 +41,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const goalStore = useGoalStore();
-const showActions = ref(false);
 
 const formatCurrency = (amount: string | number) => {
     return `R$ ${Number(amount).toFixed(2).replace(".", ",")}`;
@@ -76,10 +75,6 @@ const deleteGoal = async () => {
     }
 };
 
-const toggleActions = () => {
-    showActions.value = !showActions.value;
-};
-
 const getStatusColor = () => {
     if (props.goal.is_over_limit) {
         return {
@@ -102,7 +97,6 @@ const statusColors = getStatusColor();
     <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 cursor-pointer transition-shadow hover:shadow-md border-2"
         :class="statusColors.border"
-        @click="toggleActions"
     >
         <div class="flex items-start justify-between gap-3 mb-3">
             <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -149,7 +143,7 @@ const statusColors = getStatusColor();
                     leave-from-class="opacity-100 scale-100"
                     leave-to-class="opacity-0 scale-95"
                 >
-                    <div v-if="showActions" class="flex gap-1" @click.stop>
+                    <div class="flex gap-1">
                         <button
                             @click="deleteGoal"
                             class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
