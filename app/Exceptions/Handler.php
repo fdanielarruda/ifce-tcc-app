@@ -42,29 +42,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof ValidationException) {
-            return redirect()->back()->with('error', $e->getMessage() ?? 'Erro ao realizar requisição');
-        }
-dd($e);
-        $currentUrl = $request->fullUrl();
-        $errorKey = 'last_error_url';
-        $countKey = 'error_redirect_count';
-
-        $lastErrorUrl = Session::get($errorKey);
-        $redirectCount = Session::get($countKey, 0);
-
-        if ($lastErrorUrl === $currentUrl && $redirectCount >= 2) {
-            Session::forget([$errorKey, $countKey]);
-
-            return redirect()
-                ->route($this->getDefaultRoute())
-                ->with('error', $e->getMessage() ?? 'Erro ao realizar requisição');
-        }
-
-        if ($lastErrorUrl === $currentUrl) {
-            Session::put($countKey, $redirectCount + 1);
-        } else {
-            Session::put($errorKey, $currentUrl);
-            Session::put($countKey, 1);
+            return redirect()->back()->with('error', $e->getMessage() ?? 'Erro ao validar dados da requisição');
         }
 
         return back()->with('error', $e->getMessage() ?? 'Erro ao realizar requisição');
