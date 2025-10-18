@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof ValidationException) {
             return redirect()->back()->with('error', $e->getMessage() ?? 'Erro ao realizar requisição');
         }
-
+dd($e);
         $currentUrl = $request->fullUrl();
         $errorKey = 'last_error_url';
         $countKey = 'error_redirect_count';

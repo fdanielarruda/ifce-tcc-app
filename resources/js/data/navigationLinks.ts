@@ -3,7 +3,8 @@ import {
     HomeIcon,
     ArrowLeftEndOnRectangleIcon,
     PlusCircleIcon,
-    ArrowsRightLeftIcon
+    ArrowsRightLeftIcon,
+    ChartBarIcon
 } from '@heroicons/vue/24/solid';
 
 interface NavigationLink {
@@ -36,6 +37,12 @@ export const staticNavigationLinks: NavigationLink[] = [
         label: 'Nova Transação',
         icon: PlusCircleIcon,
         route: 'transactions.create',
+        type: 'link',
+    },
+    {
+        label: 'Metas',
+        icon: ChartBarIcon,
+        route: 'goals.index',
         type: 'link',
     },
 
