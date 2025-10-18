@@ -258,7 +258,7 @@ const toggleActions = () => {
                                 v-model:time="editForm.time"
                                 :categories="categories || []"
                                 :errors="transactionStore.errors.value"
-                                :show-type-selector="false"
+                                :show-type-selector="true"
                             />
 
                             <div class="flex gap-3 justify-end mt-6">
