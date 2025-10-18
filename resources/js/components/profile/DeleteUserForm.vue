@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import DangerButton from '@/components/DangerButton.vue';
-import InputError from '@/components/InputError.vue';
-import InputLabel from '@/components/InputLabel.vue';
-import Modal from '@/components/Modal.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
-import TextInput from '@/components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
+import DangerButton from "@/components/DangerButton.vue";
+import InputError from "@/components/InputError.vue";
+import InputLabel from "@/components/InputLabel.vue";
+import Modal from "@/components/Modal.vue";
+import SecondaryButton from "@/components/SecondaryButton.vue";
+import TextInput from "@/components/TextInput.vue";
+import { useForm } from "@inertiajs/vue3";
+import { nextTick, ref } from "vue";
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
 const form = useForm({
-    password: '',
+    password: "",
 });
 
 const confirmUserDeletion = () => {
@@ -22,7 +22,7 @@ const confirmUserDeletion = () => {
 };
 
 const deleteUser = () => {
-    form.delete(route('profile.destroy'), {
+    form.delete(route("profile.destroy"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onError: () => passwordInput.value?.focus(),
@@ -38,15 +38,16 @@ const closeModal = () => {
 </script>
 
 <template>
-    <section class="space-y-6">
+    <section class="space-y-4">
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 Excluir Conta
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Uma vez que sua conta for excluída, todos os seus recursos e dados serão permanentemente apagados. Antes de
-                excluir sua conta, por favor, baixe quaisquer dados ou informações que você deseja reter.
+                Uma vez que sua conta for excluída, todos os seus recursos e dados serão
+                permanentemente apagados. Antes de excluir sua conta, por favor, baixe
+                quaisquer dados ou informações que você deseja reter.
             </p>
         </header>
 
@@ -59,11 +60,13 @@ const closeModal = () => {
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Uma vez que sua conta for excluída, todos os seus recursos e dados serão permanentemente apagados. Por favor,
-                    insira sua senha para confirmar que deseja excluir permanentemente sua conta.
+                    Uma vez que sua conta for excluída, todos os seus recursos e dados
+                    serão apagados definitivamente.<br />
+                    Por favor, insira sua senha para confirmar que deseja excluir
+                    permanentemente sua conta.
                 </p>
 
-                <div class="mt-6">
+                <div class="mt-4">
                     <InputLabel for="password" value="Senha" class="sr-only" />
 
                     <TextInput
@@ -79,7 +82,7 @@ const closeModal = () => {
                     <InputError :message="form.errors.password" class="mt-2" />
                 </div>
 
-                <div class="mt-6 flex justify-end">
+                <div class="mt-4 flex justify-end">
                     <SecondaryButton @click="closeModal"> Cancelar </SecondaryButton>
 
                     <DangerButton

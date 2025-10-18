@@ -5,6 +5,7 @@ import { ref } from "vue";
 import ModeSelector from "@/components/new_transactions/ModeSelector.vue";
 import AiTransactionForm from "@/components/new_transactions/AiTransactionForm.vue";
 import ManualTransactionForm from "@/components/new_transactions/ManualTransactionForm.vue";
+import HeaderCell from "@/components/commons/HeaderCell.vue";
 
 interface Props {
     categories: Array<{
@@ -31,13 +32,7 @@ const handleManualSuccess = () => {
 
     <AuthenticatedLayout>
         <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-            <div class="bg-white dark:bg-gray-800 shadow-sm">
-                <div class="p-4 flex items-center justify-center">
-                    <h1 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                        Nova Transação
-                    </h1>
-                </div>
-            </div>
+            <HeaderCell title="Nova Transação" />
 
             <div class="p-4">
                 <ModeSelector v-model="mode" class="mb-6" />

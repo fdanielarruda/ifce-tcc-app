@@ -29,7 +29,7 @@ const submit = async () => {
 
 <template>
     <div class="space-y-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <div class="mb-4">
                 <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"

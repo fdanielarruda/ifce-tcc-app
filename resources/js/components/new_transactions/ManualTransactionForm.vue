@@ -38,7 +38,6 @@ const submit = async () => {
             },
             {
                 onSuccess: () => {
-                    // Resetar form
                     formData.value = {
                         description: "",
                         amount: "",
@@ -59,7 +58,7 @@ const submit = async () => {
 
 <template>
     <div class="space-y-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <form @submit.prevent="submit" class="space-y-4">
                 <TransactionFormFields
                     v-model:description="formData.description"

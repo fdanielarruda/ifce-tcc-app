@@ -47,9 +47,9 @@ const formatAmount = (event: Event) => {
                 type="button"
                 @click="emit('update:type', 'despesa')"
                 :class="[
-                    'flex-1 py-3 px-4 rounded-xl font-semibold transition-all',
+                    'flex-1 py-3 px-4 rounded-lg font-semibold transition-all',
                     type === 'despesa'
-                        ? 'bg-red-500 text-white shadow-lg'
+                        ? 'bg-red-500 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
                 ]"
             >
@@ -59,9 +59,9 @@ const formatAmount = (event: Event) => {
                 type="button"
                 @click="emit('update:type', 'receita')"
                 :class="[
-                    'flex-1 py-3 px-4 rounded-xl font-semibold transition-all',
+                    'flex-1 py-3 px-4 rounded-lg font-semibold transition-all',
                     type === 'receita'
-                        ? 'bg-green-500 text-white shadow-lg'
+                        ? 'bg-green-500 text-white shadow-sm'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
                 ]"
             >
@@ -81,7 +81,7 @@ const formatAmount = (event: Event) => {
                 type="text"
                 :value="description"
                 @input="emit('update:description', ($event.target as HTMLInputElement).value)"
-                class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Ex: Almoço no restaurante"
             />
             <p
@@ -110,7 +110,7 @@ const formatAmount = (event: Event) => {
                     type="text"
                     :value="amount"
                     @input="formatAmount"
-                    class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="0,00"
                 />
             </div>
@@ -130,7 +130,7 @@ const formatAmount = (event: Event) => {
                 id="category"
                 :value="category_id"
                 @change="emit('update:category_id', Number(($event.target as HTMLSelectElement).value))"
-                class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
                 <option value="">Selecione uma categoria</option>
                 <option
@@ -162,7 +162,7 @@ const formatAmount = (event: Event) => {
                     type="date"
                     :value="date"
                     @input="emit('update:date', ($event.target as HTMLInputElement).value)"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p v-if="errors.date" class="mt-1 text-sm text-red-600 dark:text-red-400">
                     {{ errors.date }}
@@ -181,7 +181,7 @@ const formatAmount = (event: Event) => {
                     type="time"
                     :value="time"
                     @input="emit('update:time', ($event.target as HTMLInputElement).value)"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p v-if="errors.time" class="mt-1 text-sm text-red-600 dark:text-red-400">
                     {{ errors.time }}

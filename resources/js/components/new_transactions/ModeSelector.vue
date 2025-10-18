@@ -5,14 +5,14 @@ const modelValue = defineModel<"ai" | "manual">({ required: true });
 </script>
 
 <template>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-2">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-2">
         <div class="grid grid-cols-2 gap-2">
             <button
                 @click="modelValue = 'ai'"
                 :class="[
-                    'flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all',
+                    'flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all',
                     modelValue === 'ai'
-                        ? 'bg-blue-600 text-white shadow-md'
+                        ? 'bg-blue-600 text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
                 ]"
             >
@@ -22,9 +22,9 @@ const modelValue = defineModel<"ai" | "manual">({ required: true });
             <button
                 @click="modelValue = 'manual'"
                 :class="[
-                    'flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all',
+                    'flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all',
                     modelValue === 'manual'
-                        ? 'bg-blue-600 text-white shadow-md'
+                        ? 'bg-blue-600 text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700',
                 ]"
             >
