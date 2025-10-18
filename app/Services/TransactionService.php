@@ -33,7 +33,7 @@ class TransactionService
         $totalExpenses = $allTransactions->where('type', 'despesa')->sum('amount');
         $totalBalance = $totalIncome - $totalExpenses;
 
-        $categories = Category::all();
+        $categories = Category::orderBy('title', 'asc')->get();
 
         $transactions = Transaction::where('user_id', $user->id)
             ->whereYear('created_at', $year)
@@ -62,6 +62,8 @@ class TransactionService
                 'description' => $transaction->description,
                 'category' => $transaction->category->title,
                 'category_id' => $transaction->category->id,
+                'category_icon' => $transaction->category->icon,
+                'category_color' => $transaction->category->color,
                 'time' => $transaction->created_at->format('H:i'),
                 'amount' => $transaction->type === 'receita' ? abs($transaction->amount) : -abs($transaction->amount),
                 'type' => $transaction->type,
@@ -112,7 +114,7 @@ class TransactionService
     public function prepareDataForCreate()
     {
         return [
-            'categories' => Category::all()
+            'categories' => Category::orderBy('title', 'asc')->get()
         ];
     }
 

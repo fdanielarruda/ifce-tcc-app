@@ -6,10 +6,11 @@ interface Transaction {
     description: string;
     category: string;
     category_id: number;
+    category_icon?: string;
+    category_color?: string;
     time: string;
     amount: number;
     type: "receita" | "despesa";
-    icon: string;
 }
 
 interface Props {

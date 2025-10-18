@@ -7,6 +7,13 @@ import {
     PencilIcon,
     TrashIcon,
     XMarkIcon,
+    BookOpenIcon,
+    BriefcaseIcon,
+    ChartBarIcon,
+    FaceSmileIcon,
+    HeartIcon,
+    HomeIcon,
+    QuestionMarkCircleIcon,
 } from "@heroicons/vue/24/outline";
 import TransactionFormFields from "../new_transactions/TransactionFormFields.vue";
 import { useTransactionStore } from "@/stores/useTransactionStore";
@@ -17,11 +24,12 @@ interface Props {
         description: string;
         category: string;
         category_id?: number;
+        category_icon?: string;
+        category_color?: string;
         time: string;
         date?: string;
         amount: number;
         type: "receita" | "despesa";
-        icon: string;
     };
     categories?: Array<{
         id: number;
@@ -52,11 +60,19 @@ const formatCurrency = (amount: number) => {
 
 const getIconComponent = (iconType: string) => {
     const icons: Record<string, any> = {
-        shopping: ShoppingCartIcon,
-        salary: BanknotesIcon,
-        fuel: TruckIcon,
+        "shopping-cart": ShoppingCartIcon,
+        banknotes: BanknotesIcon,
+        briefcase: BriefcaseIcon,
+        "chart-bar": ChartBarIcon,
+        home: HomeIcon,
+        car: TruckIcon,
+        "face-smile": FaceSmileIcon,
+        heart: HeartIcon,
+        "book-open": BookOpenIcon,
+        "question-mark-circle": QuestionMarkCircleIcon,
     };
-    return icons[iconType] || ShoppingCartIcon;
+
+    return icons[iconType] || QuestionMarkCircleIcon;
 };
 
 const openModal = () => {
@@ -126,8 +142,16 @@ const toggleActions = () => {
                     class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"
                 >
                     <component
-                        :is="getIconComponent(transaction.icon)"
-                        class="w-5 h-5 text-gray-600 dark:text-gray-300"
+                        :is="
+                            getIconComponent(
+                                transaction.category_icon ?? 'question-mark-circle'
+                            )
+                        "
+                        class="w-5 h-5"
+                        :class="[
+                            transaction.category_color ??
+                                'text-gray-600 dark:text-gray-300',
+                        ]"
                     />
                 </div>
                 <div class="min-w-0 flex-1">
