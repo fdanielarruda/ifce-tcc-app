@@ -1,30 +1,33 @@
 <script setup lang="ts">
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
-import { Head, usePage } from '@inertiajs/vue3';
-import FeatureCard from '@/components/dashboard/FeatureCard.vue';
-import TextButton from '@/components/itens/TextButton.vue';
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.vue";
+import { Head, usePage } from "@inertiajs/vue3";
+import FeatureCard from "@/components/dashboard/FeatureCard.vue";
+import TextButton from "@/components/itens/TextButton.vue";
 import {
     ClipboardDocumentListIcon,
     UsersIcon,
     MegaphoneIcon,
-    NewspaperIcon
-} from '@heroicons/vue/24/solid';
+    NewspaperIcon,
+} from "@heroicons/vue/24/solid";
 
 const authUser = usePage().props.auth.user;
 </script>
 
 <template>
-
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-        <div class="p-2">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">
-                Bem-vindo(a)!
-            </h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">
-                Este é o seu painel de controle
-            </p>
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
+            <div class="p-4 text-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
+                    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">
+                        Bem-vindo(a)!
+                    </h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                        Este é o seu painel de controle
+                    </p>
+                </div>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

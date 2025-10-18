@@ -1,7 +1,9 @@
 import {
     UserIcon,
     HomeIcon,
-    ArrowLeftEndOnRectangleIcon
+    ArrowLeftEndOnRectangleIcon,
+    PlusCircleIcon,
+    ArrowsRightLeftIcon
 } from '@heroicons/vue/24/solid';
 
 interface NavigationLink {
@@ -26,13 +28,13 @@ export const staticNavigationLinks: NavigationLink[] = [
     },
     {
         label: 'Transações',
-        icon: HomeIcon,
+        icon: ArrowsRightLeftIcon,
         route: 'transactions.index',
         type: 'link',
     },
     {
         label: 'Nova Transação',
-        icon: HomeIcon,
+        icon: PlusCircleIcon,
         route: 'transactions.create',
         type: 'link',
     },

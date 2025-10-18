@@ -90,9 +90,9 @@ defineExpose({
             class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col fixed h-screen top-0 left-0 z-40 w-64 transition-all duration-300 ease-in-out"
         >
             <div
-                class="flex items-center justify-center h-14 border-b border-gray-200 dark:border-gray-700 relative flex-shrink-0"
+                class="flex items-center justify-center h-14 border-b border-gray-200 dark:border-gray-700 relative flex-shrink-0 dark:text-white"
             >
-                TCC
+                Finanças APP
             </div>
 
             <nav
