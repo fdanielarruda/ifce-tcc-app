@@ -33,7 +33,13 @@ class TransactionController
 
     public function storeManual(TransactionStoreManualRequest $request)
     {
-        dd($request->validated());
+        $data = $request->validated();
+
+        $data['user_id'] = auth()->id();
+
+        $this->service->create($data);
+
+        return redirect()->route('transactions.create')->with('success', 'Transação adicionada com sucesso');
     }
 
     public function storeAi(TransactionStoreAiRequest $request)
@@ -42,5 +48,20 @@ class TransactionController
         $this->service->generateByIa($data);
 
         return redirect()->route('transactions.create')->with('success', 'Transação adicionada com sucesso');
+    }
+
+    public function update(TransactionStoreManualRequest $request, int $id)
+    {
+        $data = $request->validated();
+        $this->service->update($id, $data);
+
+        return redirect()->back()->with('success', 'Transação atualizada com sucesso');
+    }
+
+    public function destroy(int $id)
+    {
+        $this->service->delete($id);
+
+        return redirect()->back()->with('success', 'Transação deletada com sucesso');
     }
 }

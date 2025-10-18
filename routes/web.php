@@ -17,7 +17,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/transacoes', [TransactionController::class, 'index'])->name('transactions.index');
 Route::get('/transacoes/cadastrar', [TransactionController::class, 'create'])->name('transactions.create');
-Route::post('/transacoes', [TransactionController::class, 'store'])->name('transactions.store');
+Route::post('/transacoes', [TransactionController::class, 'storeManual'])->name('transactions.store');
 Route::post('/transacoes/ai', [TransactionController::class, 'storeAi'])->name('transactions.store.ai');
+Route::put('/transacoes/{id}', [TransactionController::class, 'update'])->name('transactions.update');
+Route::delete('/transacoes/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
 require __DIR__ . '/auth.php';

@@ -7,7 +7,7 @@ import TransactionGroup from "@/components/transactions/TransactionGroup.vue";
 
 interface Transaction {
     id: number;
-    title: string;
+    description: string;
     category: string;
     time: string;
     amount: number;
@@ -27,6 +27,10 @@ interface Props {
     olderTransactions?: Array<{
         date: string;
         transactions: Transaction[];
+    }>;
+    categories: Array<{
+        id: number;
+        title: string;
     }>;
 }
 
@@ -87,15 +91,24 @@ const hasTransactions =
             </div>
 
             <div class="px-4 pb-4">
-                <TransactionGroup title="Hoje" :transactions="todayTransactions" />
+                <TransactionGroup
+                    title="Hoje"
+                    :transactions="todayTransactions"
+                    :categories="categories"
+                />
 
-                <TransactionGroup title="Ontem" :transactions="yesterdayTransactions" />
+                <TransactionGroup
+                    title="Ontem"
+                    :transactions="yesterdayTransactions"
+                    :categories="categories"
+                />
 
                 <TransactionGroup
                     v-for="group in olderTransactions"
                     :key="group.date"
                     :title="group.date"
                     :transactions="group.transactions"
+                    :categories="categories"
                 />
 
                 <div v-if="!hasTransactions" class="text-center py-12">

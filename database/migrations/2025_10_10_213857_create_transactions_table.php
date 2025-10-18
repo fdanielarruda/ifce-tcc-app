@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('type');
-            $table->float('value');
+            $table->float('amount');
             $table->longText('description')->nullable();
             $table->longText('original_message')->nullable();
             $table->timestamps();

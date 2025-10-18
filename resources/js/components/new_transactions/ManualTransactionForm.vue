@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useForm } from "@inertiajs/vue3";
-import TransactionTypeSelector from "./TransactionTypeSelector.vue";
-import AmountInput from "./AmountInput.vue";
+import TransactionFormFields from "./TransactionFormFields.vue";
 
 interface Props {
     categories: Array<{
@@ -17,7 +16,7 @@ const emit = defineEmits<{
 }>();
 
 const form = useForm({
-    title: "",
+    description: "",
     amount: "",
     category_id: "",
     type: "despesa" as "receita" | "despesa",
@@ -26,7 +25,12 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("transactions.store"), {
+    const numericAmount = parseFloat(form.amount.replace(",", "."));
+    
+    form.transform((data) => ({
+        ...data,
+        amount: numericAmount,
+    })).post(route("transactions.store"), {
         onSuccess: () => {
             form.reset();
             emit("success");
@@ -39,83 +43,17 @@ const submit = () => {
     <div class="space-y-4">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
             <form @submit.prevent="submit" class="space-y-4">
-                <TransactionTypeSelector v-model="form.type" />
-
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                        Descrição
-                    </label>
-                    <input
-                        v-model="form.title"
-                        type="text"
-                        placeholder="Ex: Compras no supermercado"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <p
-                        v-if="form.errors.title"
-                        class="mt-2 text-sm text-red-600 dark:text-red-400"
-                    >
-                        {{ form.errors.title }}
-                    </p>
-                </div>
-
-                <AmountInput v-model="form.amount" :error="form.errors.amount" />
-
-                <div>
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                    >
-                        Categoria
-                    </label>
-                    <select
-                        v-model="form.category_id"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        <option value="">Selecione uma categoria</option>
-                        <option
-                            v-for="category in categories"
-                            :key="category.id"
-                            :value="category.id"
-                        >
-                            {{ category.title }}
-                        </option>
-                    </select>
-                    <p
-                        v-if="form.errors.category_id"
-                        class="mt-2 text-sm text-red-600 dark:text-red-400"
-                    >
-                        {{ form.errors.category_id }}
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            Data
-                        </label>
-                        <input
-                            v-model="form.date"
-                            type="date"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                    </div>
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                        >
-                            Hora
-                        </label>
-                        <input
-                            v-model="form.time"
-                            type="time"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                    </div>
-                </div>
+                <TransactionFormFields
+                    v-model:description="form.description"
+                    v-model:amount="form.amount"
+                    v-model:category-id="form.category_id"
+                    v-model:type="form.type"
+                    v-model:date="form.date"
+                    v-model:time="form.time"
+                    :categories="categories"
+                    :errors="form.errors"
+                    :show-type-selector="true"
+                />
 
                 <button
                     type="submit"

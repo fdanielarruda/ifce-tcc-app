@@ -3,7 +3,7 @@ import TransactionCard from "./TransactionCard.vue";
 
 interface Transaction {
     id: number;
-    title: string;
+    description: string;
     category: string;
     time: string;
     amount: number;
@@ -14,6 +14,10 @@ interface Transaction {
 interface Props {
     title: string;
     transactions: Transaction[];
+    categories?: Array<{
+        id: number;
+        title: string;
+    }>;
 }
 
 defineProps<Props>();
@@ -29,6 +33,7 @@ defineProps<Props>();
                 v-for="transaction in transactions"
                 :key="transaction.id"
                 :transaction="transaction"
+                :categories="categories"
             />
         </div>
     </div>

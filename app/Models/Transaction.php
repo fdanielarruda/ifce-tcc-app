@@ -14,7 +14,7 @@ class Transaction extends Model
         'user_id',
         'category_id',
         'type', // receita ou despesa
-        'value',
+        'amount',
         'description',
         'original_message'
     ];

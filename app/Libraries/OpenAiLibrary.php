@@ -44,9 +44,9 @@ class OpenAiLibrary
             . "Retorne APENAS um JSON válido com estas chaves obrigatórias:\n"
             . "type: 'receita' ou 'despesa'\n"
             . "category: 'Alimentação', 'Salário', 'Transporte', 'Lazer', 'Serviços', 'Saúde', ou 'Desconhecido'\n"
-            . "value: número (apenas o valor numérico, sem símbolos)\n"
+            . "amount: número (apenas o valor numérico, sem símbolos)\n"
             . "description: texto curto descritivo\n"
-            . "Exemplo de resposta: { 'type': 'despesa', 'category': 'Alimentação', 'value': 20, 'description', 'hamburguer' }\n"
+            . "Exemplo de resposta: { 'type': 'despesa', 'category': 'Alimentação', 'amount': 20, 'description', 'hamburguer' }\n"
             . "Se não conseguir extrair todas as informações obrigatórias retorne vazio";
 
         $messages = [

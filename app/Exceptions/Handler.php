@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -38,6 +39,10 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof AuthenticationException) {
             return redirect()->route('login');
+        }
+
+        if ($e instanceof ValidationException) {
+            return redirect()->back()->with('error', $e->getMessage() ?? 'Erro ao realizar requisição');
         }
 
         $currentUrl = $request->fullUrl();

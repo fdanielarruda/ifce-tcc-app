@@ -29,9 +29,11 @@ class TransactionService
         $year = $year ?? now()->year;
 
         $allTransactions = Transaction::where('user_id', $user->id)->get();
-        $totalIncome = $allTransactions->where('type', 'receita')->sum('value');
-        $totalExpenses = $allTransactions->where('type', 'despesa')->sum('value');
+        $totalIncome = $allTransactions->where('type', 'receita')->sum('amount');
+        $totalExpenses = $allTransactions->where('type', 'despesa')->sum('amount');
         $totalBalance = $totalIncome - $totalExpenses;
+
+        $categories = Category::all();
 
         $transactions = Transaction::where('user_id', $user->id)
             ->whereYear('created_at', $year)
@@ -39,8 +41,8 @@ class TransactionService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $monthlyIncome = $transactions->where('type', 'receita')->sum('value');
-        $monthlyExpenses = $transactions->where('type', 'despesa')->sum('value');
+        $monthlyIncome = $transactions->where('type', 'receita')->sum('amount');
+        $monthlyExpenses = $transactions->where('type', 'despesa')->sum('amount');
 
         $grouped = [
             'today' => [],
@@ -57,10 +59,10 @@ class TransactionService
 
             $formattedTransaction = [
                 'id' => $transaction->id,
-                'title' => $transaction->description,
+                'description' => $transaction->description,
                 'category' => $transaction->category->title,
                 'time' => $transaction->created_at->format('H:i'),
-                'amount' => $transaction->type === 'receita' ? $transaction->value : -$transaction->value,
+                'amount' => $transaction->type === 'receita' ? abs($transaction->amount) : -abs($transaction->amount),
                 'type' => $transaction->type,
                 'icon' => $this->getCategoryIcon($transaction->category->title)
             ];
@@ -101,7 +103,8 @@ class TransactionService
             'totalExpenses' => $monthlyExpenses,
             'todayTransactions' => $grouped['today'],
             'yesterdayTransactions' => $grouped['yesterday'],
-            'olderTransactions' => array_values($grouped['older'])
+            'olderTransactions' => array_values($grouped['older']),
+            'categories' => $categories
         ];
     }
 
@@ -127,6 +130,15 @@ class TransactionService
 
     public function create($data)
     {
+        $transaction = Transaction::create($data);
+
+        $transaction->load(['user', 'category']);
+
+        return $transaction;
+    }
+
+    public function createByIa($data)
+    {
         DB::beginTransaction();
 
         try {
@@ -136,16 +148,14 @@ class TransactionService
 
             $category = $this->defineCategory($result);
 
-            $transaction = Transaction::create([
+            $transaction = $this->create([
                 'user_id' => $user->id,
                 'category_id' => $category->id,
                 'type' => $result['type'],
-                'value' => $result['value'],
+                'amount' => $result['amount'],
                 'description' => $result['description'],
                 'original_message' => $data['original_message']
             ]);
-
-            $transaction->load(['user', 'category']);
 
             DB::commit();
 
@@ -163,7 +173,13 @@ class TransactionService
             'telegram_id' => auth()->user()->telegram_id
         ];
 
-        return $this->create($data);
+        return $this->createByIa($data);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->update($data);
     }
 
     public function delete(int $id)
@@ -175,7 +191,7 @@ class TransactionService
     private function convertDataToResult(array $data)
     {
         $result = $this->openAiLibrary->naturalLanguageToJsonConverter($data['original_message']);
-        $required_fields = ['type', 'category', 'value', 'description'];
+        $required_fields = ['type', 'category', 'amount', 'description'];
 
         foreach ($required_fields as $field) {
             if (!isset($result[$field])) {
