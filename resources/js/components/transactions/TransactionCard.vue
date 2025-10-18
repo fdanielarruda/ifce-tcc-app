@@ -25,7 +25,6 @@ interface Props {
         category: string;
         category_id?: number;
         category_icon?: string;
-        category_color?: string;
         time: string;
         date?: string;
         amount: number;
@@ -147,11 +146,7 @@ const toggleActions = () => {
                                 transaction.category_icon ?? 'question-mark-circle'
                             )
                         "
-                        class="w-5 h-5"
-                        :class="[
-                            transaction.category_color ??
-                                'text-gray-600 dark:text-gray-300',
-                        ]"
+                        class="w-5 h-5"s
                     />
                 </div>
                 <div class="min-w-0 flex-1">

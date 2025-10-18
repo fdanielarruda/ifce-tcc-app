@@ -63,7 +63,6 @@ class TransactionService
                 'category' => $transaction->category->title,
                 'category_id' => $transaction->category->id,
                 'category_icon' => $transaction->category->icon,
-                'category_color' => $transaction->category->color,
                 'time' => $transaction->created_at->format('H:i'),
                 'amount' => $transaction->type === 'receita' ? abs($transaction->amount) : -abs($transaction->amount),
                 'type' => $transaction->type,

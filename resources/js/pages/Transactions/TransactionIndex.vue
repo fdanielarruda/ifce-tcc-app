@@ -12,7 +12,6 @@ interface Transaction {
     category: string;
     category_id: number;
     category_icon?: string;
-    category_color?: string;
     time: string;
     amount: number;
     type: "receita" | "despesa";
