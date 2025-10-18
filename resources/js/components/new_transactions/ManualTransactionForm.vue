@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 import TransactionFormFields from "./TransactionFormFields.vue";
+import { useTransactionStore } from "@/stores/useTransactionStore";
 
 interface Props {
     categories: Array<{
@@ -15,27 +16,44 @@ const emit = defineEmits<{
     success: [];
 }>();
 
-const form = useForm({
+const transactionStore = useTransactionStore();
+
+const formData = ref({
     description: "",
     amount: "",
-    category_id: null,
+    category_id: null as number | null,
     type: "despesa" as "receita" | "despesa",
     date: new Date().toISOString().split("T")[0],
     time: new Date().toTimeString().slice(0, 5),
 });
 
-const submit = () => {
-    const numericAmount = parseFloat(form.amount.replace(",", "."));
-    
-    form.transform((data) => ({
-        ...data,
-        amount: numericAmount,
-    })).post(route("transactions.store"), {
-        onSuccess: () => {
-            form.reset();
-            emit("success");
-        },
-    });
+const submit = async () => {
+    const numericAmount = parseFloat(formData.value.amount.replace(",", "."));
+
+    try {
+        await transactionStore.createTransaction(
+            {
+                ...formData.value,
+                amount: numericAmount,
+            },
+            {
+                onSuccess: () => {
+                    // Resetar form
+                    formData.value = {
+                        description: "",
+                        amount: "",
+                        category_id: null,
+                        type: "despesa",
+                        date: new Date().toISOString().split("T")[0],
+                        time: new Date().toTimeString().slice(0, 5),
+                    };
+                    emit("success");
+                },
+            }
+        );
+    } catch (error) {
+        console.error("Erro ao criar transação:", error);
+    }
 };
 </script>
 
@@ -44,23 +62,23 @@ const submit = () => {
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
             <form @submit.prevent="submit" class="space-y-4">
                 <TransactionFormFields
-                    v-model:description="form.description"
-                    v-model:amount="form.amount"
-                    v-model:category_id="form.category_id"
-                    v-model:type="form.type"
-                    v-model:date="form.date"
-                    v-model:time="form.time"
+                    v-model:description="formData.description"
+                    v-model:amount="formData.amount"
+                    v-model:category_id="formData.category_id"
+                    v-model:type="formData.type"
+                    v-model:date="formData.date"
+                    v-model:time="formData.time"
                     :categories="categories"
-                    :errors="form.errors"
+                    :errors="transactionStore.errors.value"
                     :show-type-selector="true"
                 />
 
                 <button
                     type="submit"
-                    :disabled="form.processing"
+                    :disabled="transactionStore.isLoading.value"
                     class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white font-semibold py-4 rounded-xl transition-colors disabled:cursor-not-allowed"
                 >
-                    <span v-if="form.processing">Salvando...</span>
+                    <span v-if="transactionStore.isLoading.value">Salvando...</span>
                     <span v-else>Salvar Transação</span>
                 </button>
             </form>

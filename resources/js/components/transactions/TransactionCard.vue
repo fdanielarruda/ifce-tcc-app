@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
 import {
     ShoppingCartIcon,
     BanknotesIcon,
@@ -10,6 +9,7 @@ import {
     XMarkIcon,
 } from "@heroicons/vue/24/outline";
 import TransactionFormFields from "../new_transactions/TransactionFormFields.vue";
+import { useTransactionStore } from "@/stores/useTransactionStore";
 
 interface Props {
     transaction: {
@@ -31,6 +31,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const transactionStore = useTransactionStore();
 const showModal = ref(false);
 const showActions = ref(false);
 
@@ -67,41 +68,45 @@ const openModal = () => {
         date: props.transaction.date || new Date().toISOString().split("T")[0],
         time: props.transaction.time,
     };
+    transactionStore.clearErrors();
     showModal.value = true;
 };
 
 const closeModal = () => {
     showModal.value = false;
+    transactionStore.clearErrors();
 };
 
-const saveEdit = () => {
+const saveEdit = async () => {
     const numericAmount = parseFloat(editForm.value.amount.replace(",", "."));
 
-    const payload: any = {
-        description: editForm.value.description,
-        amount: numericAmount,
-        type: editForm.value.type,
-        date: editForm.value.date,
-        time: editForm.value.time,
-    };
-
-    if (editForm.value.category_id) {
-        payload.category_id = parseInt(editForm.value.category_id.toString());
+    try {
+        await transactionStore.updateTransaction(
+            props.transaction.id,
+            {
+                ...editForm.value,
+                amount: numericAmount,
+            },
+            {
+                onSuccess: () => {
+                    showModal.value = false;
+                },
+            }
+        );
+    } catch (error) {
+        console.error("Erro ao atualizar transação:", error);
     }
-
-    router.put(route("transactions.update", props.transaction.id), payload, {
-        preserveScroll: true,
-        onSuccess: () => {
-            showModal.value = false;
-        },
-    });
 };
 
-const deleteTransaction = () => {
-    if (confirm("Tem certeza que deseja deletar esta transação?")) {
-        router.delete(route("transactions.destroy", props.transaction.id), {
-            preserveScroll: true,
+const deleteTransaction = async () => {
+    try {
+        await transactionStore.deleteTransaction(props.transaction.id, {
+            confirmMessage: "Tem certeza que deseja deletar esta transação?",
         });
+    } catch (error) {
+        if (error instanceof Error && error.message !== "Cancelled") {
+            console.error("Erro ao deletar transação:", error);
+        }
     }
 };
 
@@ -169,6 +174,7 @@ const toggleActions = () => {
                             @click="deleteTransaction"
                             class="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                             title="Deletar"
+                            :disabled="transactionStore.isLoading.value"
                         >
                             <TrashIcon class="w-4 h-4 text-red-600 dark:text-red-400" />
                         </button>
@@ -227,22 +233,27 @@ const toggleActions = () => {
                                 v-model:date="editForm.date"
                                 v-model:time="editForm.time"
                                 :categories="categories || []"
-                                :errors="{}"
+                                :errors="transactionStore.errors.value"
                                 :show-type-selector="false"
                             />
 
                             <div class="flex gap-3 justify-end mt-6">
                                 <button
                                     @click="closeModal"
-                                    class="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    :disabled="transactionStore.isLoading.value"
+                                    class="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     @click="saveEdit"
-                                    class="px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                                    :disabled="transactionStore.isLoading.value"
+                                    class="px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50"
                                 >
-                                    Salvar
+                                    <span v-if="transactionStore.isLoading.value"
+                                        >Salvando...</span
+                                    >
+                                    <span v-else>Salvar</span>
                                 </button>
                             </div>
                         </div>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 import BalanceSummary from "@/components/transactions/BalanceSummary.vue";
 import MonthNavigator from "@/components/transactions/MonthNavigator.vue";
 import TransactionGroup from "@/components/transactions/TransactionGroup.vue";
+import { useTransactionStore } from "@/stores/useTransactionStore";
 
 interface Transaction {
     id: number;
@@ -37,6 +38,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const transactionStore = useTransactionStore();
+
 const navigateMonth = (direction: "prev" | "next") => {
     let newMonth = props.currentMonthValue;
     let newYear = props.currentYearValue;
@@ -55,17 +58,10 @@ const navigateMonth = (direction: "prev" | "next") => {
         }
     }
 
-    router.get(
-        route("transactions.index"),
-        {
-            month: newMonth,
-            year: newYear,
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-        }
-    );
+    transactionStore.navigateToMonth({
+        month: newMonth,
+        year: newYear,
+    });
 };
 
 const hasTransactions =
