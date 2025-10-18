@@ -32,6 +32,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const showModal = ref(false);
+const showActions = ref(false);
 
 const editForm = ref({
     description: props.transaction.description,
@@ -103,10 +104,17 @@ const deleteTransaction = () => {
         });
     }
 };
+
+const toggleActions = () => {
+    showActions.value = !showActions.value;
+};
 </script>
 
 <template>
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 cursor-pointer transition-shadow hover:shadow-md"
+        @click="toggleActions"
+    >
         <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0 flex-1">
                 <div
@@ -139,26 +147,36 @@ const deleteTransaction = () => {
                     {{ formatCurrency(transaction.amount) }}
                 </span>
 
-                <div class="flex gap-1 ml-2">
-                    <button
-                        @click="openModal"
-                        class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        title="Editar"
-                    >
-                        <PencilIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    </button>
-                    <button
-                        @click="deleteTransaction"
-                        class="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        title="Deletar"
-                    >
-                        <TrashIcon class="w-4 h-4 text-red-600 dark:text-red-400" />
-                    </button>
-                </div>
+                <Transition
+                    enter-active-class="transition-all duration-200"
+                    enter-from-class="opacity-0 scale-95"
+                    enter-to-class="opacity-100 scale-100"
+                    leave-active-class="transition-all duration-150"
+                    leave-from-class="opacity-100 scale-100"
+                    leave-to-class="opacity-0 scale-95"
+                >
+                    <div v-if="showActions" class="flex gap-1 ml-2" @click.stop>
+                        <button
+                            @click="openModal"
+                            class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            title="Editar"
+                        >
+                            <PencilIcon
+                                class="w-4 h-4 text-gray-600 dark:text-gray-400"
+                            />
+                        </button>
+                        <button
+                            @click="deleteTransaction"
+                            class="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            title="Deletar"
+                        >
+                            <TrashIcon class="w-4 h-4 text-red-600 dark:text-red-400" />
+                        </button>
+                    </div>
+                </Transition>
             </div>
         </div>
 
-        <!-- Modal -->
         <Teleport to="body">
             <Transition
                 enter-active-class="transition-opacity duration-200"
