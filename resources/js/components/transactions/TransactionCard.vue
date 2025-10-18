@@ -67,7 +67,6 @@ const openModal = () => {
         date: props.transaction.date || new Date().toISOString().split("T")[0],
         time: props.transaction.time,
     };
-    console.log(editForm.value)
     showModal.value = true;
 };
 

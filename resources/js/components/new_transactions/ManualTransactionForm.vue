@@ -18,7 +18,7 @@ const emit = defineEmits<{
 const form = useForm({
     description: "",
     amount: "",
-    category_id: "",
+    category_id: null,
     type: "despesa" as "receita" | "despesa",
     date: new Date().toISOString().split("T")[0],
     time: new Date().toTimeString().slice(0, 5),
@@ -46,7 +46,7 @@ const submit = () => {
                 <TransactionFormFields
                     v-model:description="form.description"
                     v-model:amount="form.amount"
-                    v-model:category-id="form.category_id"
+                    v-model:category_id="form.category_id"
                     v-model:type="form.type"
                     v-model:date="form.date"
                     v-model:time="form.time"
