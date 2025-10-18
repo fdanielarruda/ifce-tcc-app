@@ -5,35 +5,40 @@ import InputLabel from "@/components/InputLabel.vue";
 import Modal from "@/components/Modal.vue";
 import SecondaryButton from "@/components/SecondaryButton.vue";
 import TextInput from "@/components/TextInput.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useProfileStore } from "@/stores/useProfileStore";
 import { nextTick, ref } from "vue";
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
-const form = useForm({
+const { deleteAccount, isLoading, errors, clearErrors } = useProfileStore();
+
+const form = ref({
     password: "",
 });
 
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
-
     nextTick(() => passwordInput.value?.focus());
 };
 
-const deleteUser = () => {
-    form.delete(route("profile.destroy"), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value?.focus(),
-        onFinish: () => form.reset(),
-    });
+const handleDelete = async () => {
+    await deleteAccount(form.value, {
+        confirmMessage:
+            "Tem certeza de que deseja excluir sua conta? Esta ação não pode ser desfeita.",
+        onSuccess: () => {
+            closeModal();
+        },
+        onError: () => {
+            passwordInput.value?.focus();
+        },
+    }).catch(() => {});
 };
 
 const closeModal = () => {
     confirmingUserDeletion.value = false;
-
-    form.reset();
+    form.value.password = "";
+    clearErrors();
 };
 </script>
 
@@ -76,10 +81,10 @@ const closeModal = () => {
                         type="password"
                         class="mt-1 block w-full"
                         placeholder="Senha"
-                        @keyup.enter="deleteUser"
+                        @keyup.enter="handleDelete"
                     />
 
-                    <InputError :message="form.errors.password" class="mt-2" />
+                    <InputError :message="errors.password" class="mt-2" />
                 </div>
 
                 <div class="mt-4 flex justify-end">
@@ -87,9 +92,9 @@ const closeModal = () => {
 
                     <DangerButton
                         class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteUser"
+                        :class="{ 'opacity-25': isLoading }"
+                        :disabled="isLoading"
+                        @click="handleDelete"
                     >
                         Excluir Conta
                     </DangerButton>
