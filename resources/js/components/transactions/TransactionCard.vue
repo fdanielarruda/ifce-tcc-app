@@ -37,7 +37,7 @@ const showActions = ref(false);
 const editForm = ref({
     description: props.transaction.description,
     amount: Math.abs(props.transaction.amount).toFixed(2).replace(".", ","),
-    category_id: props.transaction.category_id || "",
+    category_id: props.transaction.category_id || null,
     type: props.transaction.type,
     date: props.transaction.date || new Date().toISOString().split("T")[0],
     time: props.transaction.time,
@@ -62,11 +62,12 @@ const openModal = () => {
     editForm.value = {
         description: props.transaction.description,
         amount: Math.abs(props.transaction.amount).toFixed(2).replace(".", ","),
-        category_id: props.transaction.category_id || "",
+        category_id: props.transaction.category_id || null,
         type: props.transaction.type,
         date: props.transaction.date || new Date().toISOString().split("T")[0],
         time: props.transaction.time,
     };
+    console.log(editForm.value)
     showModal.value = true;
 };
 
@@ -222,7 +223,7 @@ const toggleActions = () => {
                             <TransactionFormFields
                                 v-model:description="editForm.description"
                                 v-model:amount="editForm.amount"
-                                v-model:category-id="editForm.category_id"
+                                v-model:category_id="editForm.category_id"
                                 v-model:type="editForm.type"
                                 v-model:date="editForm.date"
                                 v-model:time="editForm.time"

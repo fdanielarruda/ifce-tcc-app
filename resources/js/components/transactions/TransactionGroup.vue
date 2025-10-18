@@ -5,6 +5,7 @@ interface Transaction {
     id: number;
     description: string;
     category: string;
+    category_id: number;
     time: string;
     amount: number;
     type: "receita" | "despesa";

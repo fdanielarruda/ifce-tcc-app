@@ -2,7 +2,7 @@
 interface Props {
     description: string;
     amount: string;
-    categoryId: string | number;
+    category_id: number | null;
     type: "receita" | "despesa";
     date: string;
     time: string;
@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
     "update:description": [value: string];
     "update:amount": [value: string];
-    "update:categoryId": [value: string | number];
+    "update:category_id": [value: number | null];
     "update:type": [value: "receita" | "despesa"];
     "update:date": [value: string];
     "update:time": [value: string];
@@ -128,8 +128,8 @@ const formatAmount = (event: Event) => {
             </label>
             <select
                 id="category"
-                :value="categoryId"
-                @change="emit('update:categoryId', ($event.target as HTMLSelectElement).value)"
+                :value="category_id"
+                @change="emit('update:category_id', Number(($event.target as HTMLSelectElement).value))"
                 class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
                 <option value="">Selecione uma categoria</option>
