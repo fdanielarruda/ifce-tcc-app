@@ -38,15 +38,18 @@ class OpenAiLibrary
         return json_decode($content, true);
     }
 
-    public function naturalLanguageToJsonConverter(string $text): array
+    public function naturalLanguageToJsonConverter(string $text, array $categories): array
     {
+        $category_list = "'" . implode("', '", $categories) . "'";
+        $first_category = $categories[0];
+
         $comando = "Extraia as informações desta transação financeira: $text\n"
             . "Retorne APENAS um JSON válido com estas chaves obrigatórias:\n"
             . "type: 'receita' ou 'despesa'\n"
-            . "category: 'Alimentação', 'Salário', 'Transporte', 'Lazer', 'Serviços', 'Saúde', ou 'Desconhecido'\n"
+            . "category: $category_list ou vazio para desconhecido\n"
             . "amount: número (apenas o valor numérico, sem símbolos)\n"
             . "description: texto curto descritivo\n"
-            . "Exemplo de resposta: { 'type': 'despesa', 'category': 'Alimentação', 'amount': 20, 'description', 'hamburguer' }\n"
+            . "Exemplo de resposta: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description', 'hamburguer' }\n"
             . "Se não conseguir extrair todas as informações obrigatórias retorne vazio";
 
         $messages = [

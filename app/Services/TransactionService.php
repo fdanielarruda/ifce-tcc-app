@@ -149,11 +149,11 @@ class TransactionService
 
             $user = User::where('telegram_id', $data['telegram_id'])->first();
 
-            $category = $this->defineCategory($result);
+            $category_id = $this->defineCategoryId($result);
 
             $transaction = $this->create([
                 'user_id' => $user->id,
-                'category_id' => $category->id,
+                'category_id' => $category_id,
                 'type' => $result['type'],
                 'amount' => $result['amount'],
                 'description' => $result['description'],
@@ -193,8 +193,10 @@ class TransactionService
 
     private function convertDataToResult(array $data)
     {
-        $result = $this->openAiLibrary->naturalLanguageToJsonConverter($data['original_message']);
-        $required_fields = ['type', 'category', 'amount', 'description'];
+        $categories = Category::orderBy('title', 'asc')->pluck('title')->toArray();
+        $result = $this->openAiLibrary->naturalLanguageToJsonConverter($data['original_message'], $categories);
+
+        $required_fields = ['type', 'amount', 'description'];
 
         foreach ($required_fields as $field) {
             if (!isset($result[$field])) {
@@ -205,18 +207,16 @@ class TransactionService
         return $result;
     }
 
-    private function defineCategory(array $result)
+    private function defineCategoryId(array $result)
     {
-        $new_category = strtolower(trim($result['category'] ?? 'desconhecido'));
+        $find_category = trim($result['category']);
 
-        $category = Category::where('title', $new_category)->first();
+        $category = Category::where('title', $find_category);
 
-        if ($category?->exists()) {
-            return $category;
+        if ($category->exists()) {
+            return $category->id;
         }
 
-        return Category::create([
-            'title' => $new_category
-        ]);
+        return null;
     }
 }
