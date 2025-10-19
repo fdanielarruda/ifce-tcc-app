@@ -22,7 +22,7 @@ class TransactionApiController extends Controller
     public function store(TransactionStoreRequest $request)
     {
         $data = $request->validated();
-        $transaction = $this->service->create($data);
+        $transaction = $this->service->createByIa($data);
 
         return response()->json([
             'message' => 'Transação salva com sucesso',

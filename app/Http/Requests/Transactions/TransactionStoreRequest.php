@@ -18,4 +18,14 @@ class TransactionStoreRequest extends FormRequest
             'original_message' => ['required']
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'telegram_id.required' => 'O campo ID do Telegram é obrigatório.',
+            'telegram_id.string' => 'O ID do Telegram deve ser uma sequência de texto.',
+            'telegram_id.exists' => 'O ID do Telegram fornecido não está cadastrado em nosso sistema.',
+            'original_message.required' => 'A mensagem original da transação é obrigatória.',
+        ];
+    }
 }
