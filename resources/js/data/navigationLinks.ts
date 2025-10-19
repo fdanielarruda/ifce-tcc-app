@@ -4,7 +4,8 @@ import {
     ArrowLeftEndOnRectangleIcon,
     PlusCircleIcon,
     ArrowsRightLeftIcon,
-    ChartBarIcon
+    ChartBarIcon,
+    DocumentChartBarIcon
 } from '@heroicons/vue/24/solid';
 
 interface NavigationLink {
@@ -46,8 +47,8 @@ export const staticNavigationLinks: NavigationLink[] = [
         type: 'link',
     },
     {
-        label: 'Relatório',
-        icon: ChartBarIcon,
+        label: 'Relatórios',
+        icon: DocumentChartBarIcon,
         route: 'reports.index',
         type: 'link',
     },
