@@ -28,8 +28,8 @@ class GoalService
         $expenses = Transaction::select('category_id', DB::raw('SUM(ABS(amount)) as total'))
             ->where('user_id', auth()->id())
             ->where('type', 'despesa')
-            ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
+            ->whereMonth('reference_date', $currentMonth)
+            ->whereYear('reference_date', $currentYear)
             ->groupBy('category_id')
             ->pluck('total', 'category_id');
 

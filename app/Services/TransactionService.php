@@ -36,9 +36,9 @@ class TransactionService
         $categories = Category::orderBy('title', 'asc')->get();
 
         $transactions = Transaction::where('user_id', $user->id)
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('created_at', 'desc')
+            ->whereYear('reference_date', $year)
+            ->whereMonth('reference_date', $month)
+            ->orderBy('reference_date', 'desc')
             ->get();
 
         $monthlyIncome = $transactions->where('type', 'receita')->sum('amount');
@@ -55,7 +55,7 @@ class TransactionService
         $yesterday = now()->subDay()->startOfDay();
 
         foreach ($transactions as $transaction) {
-            $transactionDate = $transaction->created_at->startOfDay();
+            $transactionDate = $transaction->reference_date->startOfDay();
 
             $formattedTransaction = [
                 'id' => $transaction->id,
@@ -63,7 +63,8 @@ class TransactionService
                 'category' => $transaction->category->title,
                 'category_id' => $transaction->category->id,
                 'category_icon' => $transaction->category->icon,
-                'time' => $transaction->created_at->format('H:i'),
+                'date' => $transaction->reference_date->format('Y-m-d'),
+                'time' => $transaction->reference_date->format('H:i'),
                 'amount' => $transaction->type === 'receita' ? abs($transaction->amount) : -abs($transaction->amount),
                 'type' => $transaction->type,
                 'icon' => $this->getCategoryIcon($transaction->category->title)
@@ -132,6 +133,10 @@ class TransactionService
 
     public function create($data)
     {
+        $data['reference_date'] = isset($data['reference_date']) && !empty($data['reference_date'])
+            ? $data['reference_date']
+            : now()->format('Y-m-d H:i:s');
+
         $transaction = Transaction::create($data);
 
         $transaction->load(['user', 'category']);
@@ -149,6 +154,9 @@ class TransactionService
             $user = User::where('telegram_id', $data['telegram_id'])->first();
 
             $category_id = $this->defineCategoryId($result);
+            $datetime = isset($result['reference_date']) && !empty($result['reference_date'])
+                ? $result['reference_date']
+                : now()->format('Y-m-d H:i:s');
 
             $transaction = $this->create([
                 'user_id' => $user->id,
@@ -156,7 +164,8 @@ class TransactionService
                 'type' => $result['type'],
                 'amount' => $result['amount'],
                 'description' => $result['description'],
-                'original_message' => $data['original_message']
+                'original_message' => $data['original_message'],
+                'reference_date' => $datetime
             ]);
 
             DB::commit();

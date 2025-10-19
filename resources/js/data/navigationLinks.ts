@@ -45,6 +45,12 @@ export const staticNavigationLinks: NavigationLink[] = [
         route: 'goals.index',
         type: 'link',
     },
+    {
+        label: 'Relatório',
+        icon: ChartBarIcon,
+        route: 'reports.index',
+        type: 'link',
+    },
 
     { type: 'separator' },
     {

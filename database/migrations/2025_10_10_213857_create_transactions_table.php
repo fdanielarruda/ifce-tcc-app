@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('amount');
             $table->longText('description')->nullable();
             $table->longText('original_message')->nullable();
+            $table->dateTime('reference_date');
             $table->timestamps();
         });
     }

@@ -36,6 +36,7 @@ class TransactionController
         $data = $request->validated();
 
         $data['user_id'] = auth()->id();
+        $data['reference_date'] = $request->date . ' ' . $request->time . ':00';
 
         $this->service->create($data);
 
@@ -53,6 +54,9 @@ class TransactionController
     public function update(TransactionStoreManualRequest $request, int $id)
     {
         $data = $request->validated();
+
+        $data['reference_date'] = $request->date . ' ' . $request->time . ':00';
+
         $this->service->update($id, $data);
 
         return redirect()->back()->with('success', 'Transação atualizada com sucesso');

@@ -16,10 +16,18 @@ class Transaction extends Model
         'type', // receita ou despesa
         'amount',
         'description',
-        'original_message'
+        'original_message',
+        'reference_date'
     ];
 
     protected $with = ['user', 'category'];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'reference_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     public function user(): BelongsTo
     {

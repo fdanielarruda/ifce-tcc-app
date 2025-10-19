@@ -16,6 +16,7 @@ import {
     ExclamationCircleIcon,
 } from "@heroicons/vue/24/outline";
 import { useGoalStore } from "@/stores/useGoalStore";
+import { getIconComponent } from "@/utils/iconHelper";
 
 interface Props {
     goal: {
@@ -44,23 +45,6 @@ const goalStore = useGoalStore();
 
 const formatCurrency = (amount: string | number) => {
     return `R$ ${Number(amount).toFixed(2).replace(".", ",")}`;
-};
-
-const getIconComponent = (iconType?: string) => {
-    const icons: Record<string, any> = {
-        "shopping-cart": ShoppingCartIcon,
-        banknotes: BanknotesIcon,
-        briefcase: BriefcaseIcon,
-        "chart-bar": ChartBarIcon,
-        home: HomeIcon,
-        car: TruckIcon,
-        "face-smile": FaceSmileIcon,
-        heart: HeartIcon,
-        "book-open": BookOpenIcon,
-        "question-mark-circle": QuestionMarkCircleIcon,
-    };
-
-    return icons[iconType || "question-mark-circle"] || QuestionMarkCircleIcon;
 };
 
 const deleteGoal = async () => {

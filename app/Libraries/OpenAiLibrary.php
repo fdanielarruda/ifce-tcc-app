@@ -18,7 +18,7 @@ class OpenAiLibrary
             if (!$url || !$token || !$model) {
                 throw new Exception("Falta de credenciais para IA");
             }
-            
+
             $data = [
                 "model" => $model,
                 "messages" => $messages,
@@ -50,6 +50,7 @@ class OpenAiLibrary
     {
         $category_list = "'" . implode("', '", $categories) . "'";
         $first_category = $categories[0];
+        $date = now();
 
         $comando = "Extraia as informações desta transação financeira: $text\n"
             . "Retorne APENAS um JSON válido com estas chaves obrigatórias:\n"
@@ -57,7 +58,8 @@ class OpenAiLibrary
             . "category: $category_list ou vazio para desconhecido\n"
             . "amount: número (apenas o valor numérico, sem símbolos)\n"
             . "description: texto curto descritivo\n"
-            . "Exemplo de resposta: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description', 'hamburguer' }\n"
+            . "reference_date: datetime se for identificável no texto, se não, retorne vazio. hoje é $date\n"
+            . "Exemplo de resposta: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description': 'hamburguer', 'reference_date': '2025-10-19 10:04:00' }\n"
             . "Se não conseguir extrair todas as informações obrigatórias retorne vazio";
 
         $messages = [

@@ -52,13 +52,4 @@ class TransactionStoreManualRequest extends FormRequest
             'time.date_format' => 'A hora deve estar no formato H:i.',
         ];
     }
-
-    public function validatedData(): array
-    {
-        $validated = $this->validated();
-        $validated['datetime'] = $validated['date'] . ' ' . $validated['time'];
-        unset($validated['date'], $validated['time']);
-
-        return $validated;
-    }
 }

@@ -17,6 +17,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import TransactionFormFields from "../new_transactions/TransactionFormFields.vue";
 import { useTransactionStore } from "@/stores/useTransactionStore";
+import { getIconComponent } from "@/utils/iconHelper";
 
 interface Props {
     transaction: {
@@ -55,23 +56,6 @@ const formatCurrency = (amount: number) => {
     const prefix = amount >= 0 ? "+" : "-";
     const absAmount = Math.abs(amount);
     return `${prefix}R$ ${absAmount.toFixed(2).replace(".", ",")}`;
-};
-
-const getIconComponent = (iconType: string) => {
-    const icons: Record<string, any> = {
-        "shopping-cart": ShoppingCartIcon,
-        banknotes: BanknotesIcon,
-        briefcase: BriefcaseIcon,
-        "chart-bar": ChartBarIcon,
-        home: HomeIcon,
-        car: TruckIcon,
-        "face-smile": FaceSmileIcon,
-        heart: HeartIcon,
-        "book-open": BookOpenIcon,
-        "question-mark-circle": QuestionMarkCircleIcon,
-    };
-
-    return icons[iconType] || QuestionMarkCircleIcon;
 };
 
 const openModal = () => {
