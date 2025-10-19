@@ -23,8 +23,8 @@ Route::post('/transacoes/ai', [TransactionController::class, 'storeAi'])->name('
 Route::put('/transacoes/{id}', [TransactionController::class, 'update'])->name('transactions.update');
 Route::delete('/transacoes/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
 
-Route::get('/goals', [GoalController::class, 'index'])->name('goals.index');
-Route::post('/goals', [GoalController::class, 'store'])->name('goals.store');
-Route::delete('/goals/{id}', [GoalController::class, 'destroy'])->name('goals.destroy');
+Route::get('/metas', [GoalController::class, 'index'])->name('goals.index');
+Route::post('/metas', [GoalController::class, 'store'])->name('goals.store');
+Route::delete('/metas/{id}', [GoalController::class, 'destroy'])->name('goals.destroy');
 
 require __DIR__ . '/auth.php';
