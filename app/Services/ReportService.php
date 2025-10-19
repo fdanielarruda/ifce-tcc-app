@@ -16,13 +16,8 @@ class ReportService
 
         $userId = auth()->id();
 
-        // Dados para o gráfico de rosca (por categoria)
         $categoryData = $this->getCategoryData($userId, $startDate, $endDate);
-
-        // Dados para o gráfico de barras (entrada e saída por mês)
         $monthlyData = $this->getMonthlyData($userId, $startDate, $endDate);
-
-        // Totais gerais
         $totals = $this->getTotals($userId, $startDate, $endDate);
 
         return [
@@ -34,6 +29,57 @@ class ReportService
                 'end_date' => $endDate,
             ],
         ];
+    }
+
+    public function exportToCSV($userId, $startDate, $endDate)
+    {
+        $transactions = Transaction::where('transactions.user_id', $userId)
+            ->whereBetween('transactions.reference_date', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->select(
+                'transactions.reference_date',
+                'transactions.description',
+                'categories.title as category',
+                'transactions.type',
+                'transactions.amount'
+            )
+            ->orderBy('transactions.reference_date', 'desc')
+            ->get();
+
+        $filename = 'relatorio_' . $startDate . '_' . $endDate . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function () use ($transactions) {
+            $file = fopen('php://output', 'w');
+
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($file, ['Data', 'Descrição', 'Categoria', 'Tipo', 'Valor'], ';');
+
+            foreach ($transactions as $transaction) {
+                $type = $transaction->type === 'receita' ? 'Receita' : 'Despesa';
+
+                $amount = abs($transaction->amount);
+                $amount = $type == 'Receita' ? $amount : -$amount;
+
+                fputcsv($file, [
+                    Carbon::parse($transaction->reference_date)->format('d/m/Y'),
+                    $transaction->description,
+                    $transaction->category,
+                    $type,
+                    number_format($amount, 2, ',', '.')
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     private function getCategoryData($userId, $startDate, $endDate)
@@ -73,7 +119,6 @@ class ReportService
             ->orderBy('month')
             ->get();
 
-        // Organiza os dados por mês
         $months = [];
         foreach ($data as $item) {
             $monthKey = $item->month;

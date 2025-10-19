@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/metas/{id}', [GoalController::class, 'destroy'])->name('goals.destroy');
 
     Route::get('/relatorio', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/relatorio/exportar', [ReportController::class, 'export'])->name('reports.export');
 });
 
 require __DIR__ . '/auth.php';

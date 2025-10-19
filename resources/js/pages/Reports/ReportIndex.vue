@@ -42,10 +42,14 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { isLoading, applyFilters } = useReportStore();
+const { isLoading, applyFilters, exportFilters } = useReportStore();
 
 const handleApplyFilters = async (filters: { start_date: string; end_date: string }) => {
     await applyFilters(filters);
+};
+
+const handleExportFilters = async (filters: { start_date: string; end_date: string }) => {
+    await exportFilters(filters);
 };
 </script>
 
@@ -62,6 +66,7 @@ const handleApplyFilters = async (filters: { start_date: string; end_date: strin
                     :initial-end-date="filters.end_date"
                     :is-loading="isLoading"
                     @apply="handleApplyFilters"
+                    @export="handleExportFilters"
                 />
 
                 <SummaryCards :totals="totals" />
