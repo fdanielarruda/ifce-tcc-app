@@ -92,7 +92,7 @@ defineExpose({
             <div
                 class="flex items-center justify-center h-14 border-b border-gray-200 dark:border-gray-700 relative flex-shrink-0 dark:text-white"
             >
-                Finanças APP
+                Numera
             </div>
 
             <nav

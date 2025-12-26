@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\StringHelper;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -25,9 +26,18 @@ class UserService
         return $user;
     }
 
-    public function delete(array $data)
+    public function delete(array $data): void
     {
         $user = User::where('telegram_id', $data['telegram_id']);
-        $user->delete();
+
+        if (!$user->exists()) {
+            throw new Exception("Usuário não encontrado");
+        }
+
+        $deletedCount = $user->where('email', $data['email'])->delete();
+
+        if ($deletedCount === 0) {
+            throw new Exception("Email inválido. O email não corresponde a sua conta.");
+        }
     }
 }

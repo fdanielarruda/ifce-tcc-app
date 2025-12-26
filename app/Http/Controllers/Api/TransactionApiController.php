@@ -19,6 +19,23 @@ class TransactionApiController extends Controller
         ]);
     }
 
+    public function summary(string $type)
+    {
+        $telegramId = request()->query('telegram_id');
+
+        if (!$telegramId) {
+            return response()->json([
+                'message' => 'telegram_id é obrigatório'
+            ], 400);
+        }
+
+        $summary = $this->service->getSummary($telegramId, $type);
+
+        return response()->json([
+            'summary' => $summary
+        ]);
+    }
+
     public function store(TransactionStoreRequest $request)
     {
         $data = $request->validated();

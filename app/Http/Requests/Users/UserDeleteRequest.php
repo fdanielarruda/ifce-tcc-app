@@ -14,7 +14,8 @@ class UserDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'telegram_id' => ['string']
+            'telegram_id' => ['required', 'string'],
+            'email' => ['required', 'string']
         ];
     }
 }

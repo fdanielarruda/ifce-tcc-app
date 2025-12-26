@@ -21,5 +21,6 @@ Route::get('/users', [UserApiController::class, 'index']);
 Route::post('/users', [UserApiController::class, 'store']);
 Route::delete('/users', [UserApiController::class, 'delete']);
 
+Route::get('/transactions/summary/{type}', [TransactionApiController::class, 'summary']);
 Route::post('/transactions', [TransactionApiController::class, 'store']);
 Route::delete('/transactions/{id}', [TransactionApiController::class, 'delete']);

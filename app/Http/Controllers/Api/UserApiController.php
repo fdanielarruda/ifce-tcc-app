@@ -36,11 +36,18 @@ class UserApiController extends Controller
 
     public function delete(UserDeleteRequest $request)
     {
-        $data = $request->validated();
-        $this->service->delete($data);
+        try {
+            $data = $request->validated();
+            $this->service->delete($data);
 
-        return response()->json([
-            'message' => 'Usuário deletado com sucesso'
-        ]);
+            return response()->json([
+                'message' => 'Usuário deletado com sucesso'
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], $e->getCode() ?? 400);
+        }
     }
 }

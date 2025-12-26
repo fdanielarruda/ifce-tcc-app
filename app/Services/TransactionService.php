@@ -21,6 +21,65 @@ class TransactionService
         return Transaction::get();
     }
 
+    public function getSummary(string $telegramId, string $type)
+    {
+        $user = User::where('telegram_id', $telegramId)->first();
+
+        if (!$user) {
+            throw new Exception("Usuário não encontrado");
+        }
+
+        if ($type === 'month') {
+            return $this->getSummaryByMonth($user->id);
+        } elseif ($type === 'category') {
+            return $this->getSummaryByCategory($user->id);
+        }
+
+        throw new Exception("Tipo de resumo inválido. Use 'month' ou 'category'");
+    }
+
+    private function getSummaryByMonth(int $userId)
+    {
+        return Transaction::where('user_id', $userId)
+            ->select(
+                DB::raw("TO_CHAR(reference_date, 'YYYY-MM') as month"),
+                DB::raw("TO_CHAR(reference_date, 'MM/YYYY') as month_formatted"),
+                DB::raw('SUM(amount) as total'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->groupBy('month', 'month_formatted')
+            ->orderBy('month', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'month' => $item->month_formatted,
+                    'total' => (float) $item->total,
+                    'count' => $item->count
+                ];
+            });
+    }
+
+    private function getSummaryByCategory(int $userId)
+    {
+        return Transaction::where('user_id', $userId)
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->select(
+                'categories.title as category',
+                DB::raw('SUM(transactions.amount) as total'),
+                DB::raw('COUNT(transactions.id) as count')
+            )
+            ->groupBy('categories.id', 'categories.title')
+            ->orderBy('total', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'category' => $item->category,
+                    'total' => (float) $item->total,
+                    'count' => $item->count
+                ];
+            });
+    }
+
     public function getTransactionsGroupedByDate(?int $month = null, ?int $year = null)
     {
         $user = auth()->user();

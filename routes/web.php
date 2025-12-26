@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\GoalController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\ReportController;
 use App\Http\Controllers\Web\TransactionController;
+use App\Http\Controllers\Web\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])
@@ -29,6 +30,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/relatorio', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/relatorio/exportar', [ReportController::class, 'export'])->name('reports.export');
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/primeiro-acesso', [UserController::class, 'firstAccess'])->name('first-access');
+    Route::post('/primeiro-acesso', [UserController::class, 'processFirstAccess'])->name('first-access.process');
 });
 
 require __DIR__ . '/auth.php';
