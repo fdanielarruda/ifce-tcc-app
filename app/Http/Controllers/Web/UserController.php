@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Helpers\StringHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\UserCreateRequest;
-use App\Http\Requests\User\UserDeleteRequest;
+use App\Http\Requests\Auth\FirstAccessRequest;
+use App\Http\Requests\Users\UserDeleteRequest;
+use App\Http\Requests\Users\UserStoreRequest;
 use App\Mail\AccessCodeMail;
 use App\Models\User;
 use App\Services\UserService;
@@ -28,7 +30,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(UserCreateRequest $request)
+    public function store(UserStoreRequest $request)
     {
         try {
             $user = $this->service->create($request->validated());
@@ -55,18 +57,12 @@ class UserController extends Controller
         return Inertia::render('Auth/FirstAccess');
     }
 
-    public function processFirstAccess(Request $request)
+    public function processFirstAccess(FirstAccessRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ], [
-            'email.exists' => 'Email não encontrado em nosso sistema.',
-        ]);
-
         try {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->firstOrFail();
 
-            $code = \App\Helpers\StringHelper::newCode(8);
+            $code = StringHelper::newCode(8);
             $user->password = Hash::make($code);
             $user->save();
 
@@ -74,7 +70,7 @@ class UserController extends Controller
 
             return back()->with('success', 'Um novo código de acesso foi enviado para seu email!');
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return back()->withErrors(['email' => 'Ocorreu um erro ao enviar o código. Tente novamente.']);
         }
     }
 }

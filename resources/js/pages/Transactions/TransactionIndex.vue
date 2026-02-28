@@ -64,6 +64,12 @@ const navigateMonth = (direction: "prev" | "next") => {
     });
 };
 
+const handleGoToDate = (date: string) => {
+    const [year, month] = date.split('-').map(Number);
+
+    transactionStore.navigateToMonth({ month, year });
+};
+
 const hasTransactions =
     props.todayTransactions.length > 0 ||
     props.yesterdayTransactions.length > 0 ||
@@ -71,42 +77,27 @@ const hasTransactions =
 </script>
 
 <template>
+
     <Head title="Transações" />
 
     <AuthenticatedLayout>
         <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div class="p-4">
-                <BalanceSummary
-                    :total-balance="totalBalance"
-                    :total-income="totalIncome"
-                    :total-expenses="totalExpenses"
-                />
+                <BalanceSummary :total-balance="totalBalance" :total-income="totalIncome"
+                    :total-expenses="totalExpenses" />
             </div>
 
             <div class="px-4 py-3">
-                <MonthNavigator :current-month="currentMonth" @navigate="navigateMonth" />
+                <MonthNavigator :current-month="currentMonth" @navigate="navigateMonth" @go-to-date="handleGoToDate" />
             </div>
 
             <div class="px-4 pb-4">
-                <TransactionGroup
-                    title="Hoje"
-                    :transactions="todayTransactions"
-                    :categories="categories"
-                />
+                <TransactionGroup title="Hoje" :transactions="todayTransactions" :categories="categories" />
 
-                <TransactionGroup
-                    title="Ontem"
-                    :transactions="yesterdayTransactions"
-                    :categories="categories"
-                />
+                <TransactionGroup title="Ontem" :transactions="yesterdayTransactions" :categories="categories" />
 
-                <TransactionGroup
-                    v-for="group in olderTransactions"
-                    :key="group.date"
-                    :title="group.date"
-                    :transactions="group.transactions"
-                    :categories="categories"
-                />
+                <TransactionGroup v-for="group in olderTransactions" :key="group.date" :title="group.date"
+                    :transactions="group.transactions" :categories="categories" />
 
                 <div v-if="!hasTransactions" class="text-center py-12">
                     <p class="text-gray-500 dark:text-gray-400">
