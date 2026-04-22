@@ -54,7 +54,7 @@
         <p>Olá!</p>
         @endif
 
-        <p>Use o código abaixo para acessar sua conta: {{ $code }}</p>
+        <p>Use o código abaixo como primeira senha para acessar sua conta: {{ $code }}</p>
 
         <p>Não compartilhe este código com ninguém.</p>
 

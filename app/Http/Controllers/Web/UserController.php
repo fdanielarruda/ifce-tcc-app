@@ -62,7 +62,7 @@ class UserController extends Controller
         try {
             $user = User::where('email', $request->email)->firstOrFail();
 
-            $code = StringHelper::newCode(8);
+            $code = strtoupper(StringHelper::newCode(4));
             $user->password = Hash::make($code);
             $user->save();
 
