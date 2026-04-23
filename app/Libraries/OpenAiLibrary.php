@@ -52,15 +52,16 @@ class OpenAiLibrary
         $first_category = $categories[0];
         $date = now();
 
-        $comando = "Extraia as informações desta transação financeira: $text\n"
+        $comando = "Extraia as informações desta transação ou saldo financeiro: $text\n"
             . "Retorne APENAS um JSON válido com estas chaves obrigatórias:\n"
-            . "type: 'receita' ou 'despesa'\n"
-            . "category: $category_list ou vazio para desconhecido\n"
-            . "amount: número (apenas o valor numérico, sem símbolos)\n"
+            . "type: 'receita', 'despesa' ou 'saldo' (use 'saldo' quando o usuário informar quanto tem na conta, ex: 'tenho 1000 reais', 'mil reais na conta')\n"
+            . "category: $category_list, procure outros ou vazio para desconhecido\n"
+            . "amount: número (apenas o valor numérico, sem símbolos. Converta valores por extenso, ex: 'mil' = 1000)\n"
             . "description: texto curto descritivo\n"
             . "reference_date: datetime se for identificável no texto, se não, retorne vazio. hoje é $date\n"
-            . "Exemplo de resposta: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description': 'hamburguer', 'reference_date': '2025-10-19 10:04:00' }\n"
-            . "Se não conseguir extrair todas as informações obrigatórias retorne vazio";
+            . "Exemplo de resposta para saldo: { 'type': 'saldo', 'category': '', 'amount': 1000, 'description': 'saldo em conta', 'reference_date': '' }\n"
+            . "Exemplo de resposta para despesa: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description': 'hamburguer', 'reference_date': '2025-10-19 10:04:00' }\n"
+            . "Se não conseguir extrair um valor monetário e uma descrição mínima da mensagem, retorne: { \"error\": \"Não foi possível interpretar a mensagem\" }";
 
         $messages = [
             [

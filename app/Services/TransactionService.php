@@ -212,20 +212,34 @@ class TransactionService
 
             $user = User::where('telegram_id', $data['telegram_id'])->first();
 
+            if (!$user) {
+                throw new Exception("Usuário não encontrado");
+            }
+
             $category_id = $this->defineCategoryId($result);
+
+            if (!$category_id) {
+                throw new Exception("Nenhuma categoria disponível no sistema");
+            }
+
             $datetime = isset($result['reference_date']) && !empty($result['reference_date'])
                 ? $result['reference_date']
                 : now()->format('Y-m-d H:i:s');
 
             $transaction = $this->create([
-                'user_id' => $user->id,
-                'category_id' => $category_id,
-                'type' => $result['type'],
-                'amount' => $result['amount'],
-                'description' => $result['description'],
+                'user_id'          => $user->id,
+                'category_id'      => $category_id,
+                'type'             => $result['type'],
+                'amount'           => $result['amount'],
+                'description'      => $result['description'],
                 'original_message' => $data['original_message'],
-                'reference_date' => $datetime
+                'reference_date'   => $datetime
             ]);
+
+            $totalIncome = Transaction::where('user_id', $user->id)->where('type', 'receita')->sum('amount');
+            $totalExpenses = Transaction::where('user_id', $user->id)->where('type', 'despesa')->sum('amount');
+
+            $transaction->balance = (float) $totalIncome - (float) $totalExpenses;
 
             DB::commit();
 
@@ -263,27 +277,43 @@ class TransactionService
         $categories = Category::orderBy('title', 'asc')->pluck('title')->toArray();
         $result = $this->openAiLibrary->naturalLanguageToJsonConverter($data['original_message'], $categories);
 
+        if (isset($result['error'])) {
+            throw new Exception($result['error']);
+        }
+
         $required_fields = ['type', 'amount', 'description'];
 
         foreach ($required_fields as $field) {
-            if (!isset($result[$field])) {
+            if (!isset($result[$field]) || $result[$field] === '' || $result[$field] === null) {
                 throw new Exception("Não foi possível interpretar a mensagem");
             }
+        }
+
+        if (!is_numeric($result['amount']) || $result['amount'] <= 0) {
+            throw new Exception("Valor monetário inválido ou não encontrado na mensagem");
+        }
+
+        if ($result['type'] === 'saldo') {
+            $result['type'] = 'receita';
+            $result['description'] = $result['description'];
         }
 
         return $result;
     }
 
-    private function defineCategoryId(array $result)
+    private function defineCategoryId(array $result): int
     {
-        $find_category = trim($result['category']);
+        $find_category = trim($result['category'] ?? '');
 
-        $category = Category::where('title', $find_category);
-
-        if ($category->exists()) {
-            return $category->first()->id;
+        if (!empty($find_category)) {
+            $category = Category::where('title', $find_category)->first();
+            if ($category) {
+                return $category->id;
+            }
         }
 
-        return null;
+        $fallback = Category::where('title', 'Outros')->firstOrFail();
+
+        return $fallback->id;
     }
 }

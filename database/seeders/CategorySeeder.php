@@ -49,6 +49,10 @@ class CategorySeeder extends Seeder
                 'title' => 'Educação',
                 'icon' => 'book-open',
             ],
+            [
+                'title' => 'Outros',
+                'icon' => 'book-open',
+            ],
         ];
 
         DB::table('categories')->upsert(
