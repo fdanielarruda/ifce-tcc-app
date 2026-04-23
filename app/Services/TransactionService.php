@@ -285,7 +285,7 @@ class TransactionService
 
         foreach ($required_fields as $field) {
             if (!isset($result[$field]) || $result[$field] === '' || $result[$field] === null) {
-                throw new Exception("Não foi possível interpretar a mensagem");
+                throw new Exception("Não consegui entender sua mensagem.\n\nTente descrever o valor e o tipo da transação, por exemplo:\n- Gastei 50 reais no mercado\n- Recebi 1000 reais de salário\n- Tenho 500 reais na conta\n\nOu envie um arquivo com o extrato.");
             }
         }
 
@@ -295,7 +295,6 @@ class TransactionService
 
         if ($result['type'] === 'saldo') {
             $result['type'] = 'receita';
-            $result['description'] = $result['description'];
         }
 
         return $result;

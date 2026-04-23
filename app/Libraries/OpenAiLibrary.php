@@ -61,7 +61,7 @@ class OpenAiLibrary
             . "reference_date: datetime se for identificável no texto, se não, retorne vazio. hoje é $date\n"
             . "Exemplo de resposta para saldo: { 'type': 'saldo', 'category': '', 'amount': 1000, 'description': 'saldo em conta', 'reference_date': '' }\n"
             . "Exemplo de resposta para despesa: { 'type': 'despesa', 'category': '$first_category', 'amount': 20, 'description': 'hamburguer', 'reference_date': '2025-10-19 10:04:00' }\n"
-            . "Se não conseguir extrair um valor monetário e uma descrição mínima da mensagem, retorne: { \"error\": \"Não foi possível interpretar a mensagem\" }";
+            . "Se não conseguir extrair um valor monetário e uma descrição mínima da mensagem, retorne: { \"error\": \"Não consegui entender sua mensagem.\n\nTente descrever o valor e o tipo da transação, por exemplo:\n- Gastei 50 reais no mercado\n- Recebi 1000 reais de salário\n- Tenho 500 reais na conta\n\nOu envie um arquivo com o extrato.\" }";
 
         $messages = [
             [
