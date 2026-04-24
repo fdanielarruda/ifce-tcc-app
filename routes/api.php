@@ -22,5 +22,7 @@ Route::post('/users', [UserApiController::class, 'store']);
 Route::delete('/users', [UserApiController::class, 'delete']);
 
 Route::get('/transactions/summary/{type}', [TransactionApiController::class, 'summary']);
+Route::get('/transactions', [TransactionApiController::class, 'index']);
 Route::post('/transactions', [TransactionApiController::class, 'store']);
+Route::put('/transactions/{id}', [TransactionApiController::class, 'update']);
 Route::delete('/transactions/{id}', [TransactionApiController::class, 'delete']);

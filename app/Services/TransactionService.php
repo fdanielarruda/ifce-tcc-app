@@ -21,6 +21,37 @@ class TransactionService
         return Transaction::get();
     }
 
+    public function listByTelegramId(string $telegramId, int $limit = 10)
+    {
+        $user = User::where('telegram_id', $telegramId)->first();
+
+        if (!$user) {
+            throw new Exception("Usuário não encontrado");
+        }
+
+        return Transaction::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get(['id', 'description', 'amount', 'type', 'reference_date']);
+    }
+
+    public function updateByTelegramId(int $id, string $telegramId, array $data)
+    {
+        $user = User::where('telegram_id', $telegramId)->first();
+
+        if (!$user) {
+            throw new Exception("Usuário não encontrado");
+        }
+
+        $transaction = Transaction::where('id', $id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $transaction->update($data);
+
+        return $transaction->fresh();
+    }
+
     public function getSummary(string $telegramId, string $type)
     {
         $user = User::where('telegram_id', $telegramId)->first();
